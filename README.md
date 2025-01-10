@@ -16,3 +16,9 @@ Express : Router
 
 ## 1-2. Services
 비즈니스 로직 실행
+
+## 2-0. Movies Controller
+```shell
+$ nest g co 
+ : movies
+```
