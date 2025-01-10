@@ -10,3 +10,6 @@ $ nest new
 ## 1-0. Overview
 흐름 파악
 main -> controller -> server
+
+## 1-1. Controller
+Express : Router
