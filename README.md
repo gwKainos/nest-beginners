@@ -22,3 +22,6 @@ Express : Router
 $ nest g co 
  : movies
 ```
+
+## 2-1. More Routes
+:id 아래로 내려갈 경우 id로 인식할 수 있으니 search 위치에 주의할 것.
