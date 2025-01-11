@@ -31,3 +31,6 @@ $ nest g co
 $ nest g s 
  : movies
 ```
+
+## 2-3. Movies Service part Two
+삭제 코드에 주의
