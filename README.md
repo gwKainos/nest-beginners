@@ -59,3 +59,12 @@ https://docs.nestjs.com/techniques/validation
 $ npm i @nestjs/mapped-types
 ```
 - update dto는 extends PartialType(CreateMovieDto) 방식 사용
+
+## 2-6. Modules and Dependency Injection
+```shell
+$ nest g mo
+ : movies
+ 
+$ nest g co
+ : app
+```
