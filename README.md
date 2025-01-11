@@ -77,3 +77,5 @@ NestJS는 플랫폼으로 Express와 Fastify를 지원(기본 : Express)
 ## 3-1. Your first Unit Test
 
 ## 3-2. Testing getAll and getOne
+
+## 3-3. Testing delete and create
