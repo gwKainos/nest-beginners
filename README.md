@@ -68,3 +68,6 @@ $ nest g mo
 $ nest g co
  : app
 ```
+
+## 2-7. Express on NestJS
+NestJS는 플랫폼으로 Express와 Fastify를 지원(기본 : Express)
