@@ -54,4 +54,8 @@ https://docs.nestjs.com/techniques/validation
  : transform: true는 들어오는 데이터 자동 형변환
  : forbidNonWhitelisted: true는 데코레이터를 사용하지 않는 값은 요청 불가
 
-- 
+## 2-5. DTOs and Validation part Two
+```shell
+$ npm i @nestjs/mapped-types
+```
+- update dto는 extends PartialType(CreateMovieDto) 방식 사용
