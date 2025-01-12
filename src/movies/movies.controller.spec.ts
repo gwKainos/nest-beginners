@@ -83,11 +83,13 @@ describe('MoviesController', () => {
     });
   });
 
-  describe('deleteOne', () => {
+  describe('remove', () => {
     it('should delete a movie and return void', () => {
       jest.spyOn(service, 'deleteOne').mockReturnValue(undefined);
+      controller.remove(1);
 
-      expect(controller.deleteOne(1)).toBeUndefined();
+      expect(service.deleteOne).toHaveBeenCalled();
+      expect(service.deleteOne).toHaveBeenCalledWith(1);
     });
   });
 });
