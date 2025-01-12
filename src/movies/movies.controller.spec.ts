@@ -82,4 +82,12 @@ describe('MoviesController', () => {
       expect(controller.getOne(1)).toEqual(result);
     });
   });
+
+  describe('deleteOne', () => {
+    it('should delete a movie and return void', () => {
+      jest.spyOn(service, 'deleteOne').mockReturnValue(undefined);
+
+      expect(controller.deleteOne(1)).toBeUndefined();
+    });
+  });
 });
