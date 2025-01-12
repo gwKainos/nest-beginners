@@ -85,3 +85,5 @@ NestJS는 플랫폼으로 Express와 Fastify를 지원(기본 : Express)
 ## 4-0. Testing movies
 
 ## 4-1. Testing GET movies id
+
+## 4-2. Testing PATCH and DELETE movies id
