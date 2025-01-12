@@ -51,4 +51,20 @@ describe('MoviesController', () => {
       expect(controller.create(createMovieDto)).toEqual(result);
     });
   });
+
+  describe('findAll', () => {
+    it('should return an array of movies', () => {
+      const result: Movie[] = [
+        {
+          id: 1,
+          title: 'Test Movie',
+          genres: ['test'],
+          year: 2000,
+        },
+      ];
+      jest.spyOn(service, 'getAll').mockReturnValue(result);
+
+      expect(controller.getAll()).toEqual(result);
+    });
+  });
 });
