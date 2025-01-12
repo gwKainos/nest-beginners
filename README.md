@@ -14,3 +14,7 @@ $ nest g mo movies
 $ nest g co movies
 $ nest g s movies
 ```
+
+```shell
+$ npm i @nestjs/mapped-types
+```
