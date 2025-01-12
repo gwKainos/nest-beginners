@@ -1,12 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Movie } from "./entities/movie.entity";
-import { CreateMovieDto } from "./dto/create-movie.dto";
-import { UpdateMovieDto } from "./dto/update-movie.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Movie } from './entities/movie.entity';
+import { CreateMovieDto } from './dto/create-movie.dto';
+import { UpdateMovieDto } from './dto/update-movie.dto';
 
 @Injectable()
 export class MoviesService {
   private movies: Movie[] = [];
-
 
   create(movieData: CreateMovieDto): Movie {
     // 새 Movie 객체를 변수에 담는다
@@ -28,8 +27,8 @@ export class MoviesService {
 
   getOne(id: number) {
     const movie = this.movies.find((movie) => movie.id === id);
-    if(!movie) {
-      throw new NotFoundException(`Movie with ID ${id} not found.`)
+    if (!movie) {
+      throw new NotFoundException(`Movie with ID ${id} not found.`);
     }
 
     return movie;

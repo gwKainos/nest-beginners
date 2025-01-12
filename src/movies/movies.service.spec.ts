@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesService } from './movies.service';
-import { CreateMovieDto } from "./dto/create-movie.dto";
-import { NotFoundException } from "@nestjs/common";
+import { CreateMovieDto } from './dto/create-movie.dto';
+import { NotFoundException } from '@nestjs/common';
 
 describe('MoviesService', () => {
   let service: MoviesService;
