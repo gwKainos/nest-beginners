@@ -11,4 +11,9 @@ export class MoviesController {
   create(@Body() movieData: CreateMovieDto): Movie {
     return this.moviesService.create(movieData);
   }
+
+  @Get()
+  getAll(): Movie[] {
+    return this.moviesService.getAll();
+  }
 }

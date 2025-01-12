@@ -15,11 +15,11 @@ describe('MoviesController', () => {
         {
           provide: MoviesService,
           useValue: {
-            findAll: jest.fn(),
-            findOne: jest.fn(),
+            getAll: jest.fn(),
+            getOne: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
-            remove: jest.fn(),
+            deleteOne: jest.fn(),
           },
         },
       ],
@@ -52,7 +52,7 @@ describe('MoviesController', () => {
     });
   });
 
-  describe('findAll', () => {
+  describe('getAll', () => {
     it('should return an array of movies', () => {
       const result: Movie[] = [
         {
