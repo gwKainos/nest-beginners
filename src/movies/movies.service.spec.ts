@@ -16,87 +16,96 @@ describe('MoviesService', () => {
 
   describe('create', () => {
     it('should create a movie', () => {
-      const createdMovie: CreateMovieDto = service.create({
+      const movieData: CreateMovieDto = {
         title: 'Test Movie',
         genres: ['test'],
         year: 2000,
-      });
+      };
 
-      // 반환된 객체 자체에 대한 검증
-      expect(createdMovie).toBeDefined();
-      expect(createdMovie.title).toBe('Test Movie');
-      expect(createdMovie.genres).toContain('test');
-      expect(createdMovie.year).toBe(2000);
+      const createdMovie = service.create(movieData);
+
+      expect(createdMovie).toMatchObject({
+        id: expect.any(Number),
+        ...movieData,
+      });
     });
   });
 
   describe('getAll', () => {
     it('should return an array', () => {
+      service.create({
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      });
+
       const result = service.getAll();
-      expect(result).toBeInstanceOf(Array);
+      expect(Array.isArray(result)).toBeTruthy();
+      expect(result.length).toBeGreaterThan(0);
     });
   });
 
   describe('getOne', () => {
-    it('should return a movie', () => {
+    beforeEach(() => {
       service.create({
         title: 'Test Movie',
         genres: ['test'],
         year: 2000,
       });
-      const movie = service.getOne(1);
-      expect(movie).toBeDefined();
     });
 
-    it('should throw 404 error', () => {
-      try {
-        service.getOne(999);
-      } catch (e) {
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
+    it('should return a movie by ID', () => {
+      const movie = service.getOne(1);
+      expect(movie).toBeDefined();
+      expect(movie.id).toBe(1);
+    });
+
+    it('should throw a NotFoundException if movie not found', () => {
+      expect(() => service.getOne(999)).toThrow(NotFoundException);
     });
   });
 
   describe('deleteOne', () => {
-    it('deletes a movie', () => {
+    beforeEach(() => {
       service.create({
         title: 'Test Movie',
         genres: ['test'],
         year: 2000,
       });
+    });
+
+    it('should delete a movie by ID', () => {
       const beforeDelete = service.getAll().length;
       service.deleteOne(1);
       const afterDelete = service.getAll().length;
+
       expect(afterDelete).toBeLessThan(beforeDelete);
     });
 
-    it('should throw a NotFoundException', () => {
-      try {
-        service.deleteOne(999);
-      } catch (e) {
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
+    it('should throw a NotFoundException if movie not found', () => {
+      expect(() => service.deleteOne(999)).toThrow(NotFoundException);
     });
   });
 
   describe('update', () => {
-    it('should update a movie', () => {
+    beforeEach(() => {
       service.create({
         title: 'Test Movie',
         genres: ['test'],
         year: 2000,
       });
-      service.update(1, { title: 'Updated Test' });
-      const movie = service.getOne(1);
-      expect(movie.title).toEqual('Updated Test');
     });
 
-    it('should throw a NotFoundException', () => {
-      try {
-        service.update(999, {});
-      } catch (e) {
-        expect(e).toBeInstanceOf(NotFoundException);
-      }
+    it('should update a movie by ID', () => {
+      const updateData = { title: 'Updated Test Movie' };
+      service.update(1, updateData);
+
+      const updatedMovie = service.getOne(1);
+      expect(updatedMovie.title).toBe(updateData.title);
+    });
+
+    it('should throw a NotFoundException if movie not found', () => {
+      expect(() => service.update(999, {})).toThrow(NotFoundException);
     });
   });
 });
