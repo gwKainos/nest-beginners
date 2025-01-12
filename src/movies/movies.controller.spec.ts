@@ -8,19 +8,30 @@ describe('MoviesController', () => {
   let controller: MoviesController;
   let service: MoviesService;
 
+  const mockMovie: Movie = {
+    id: 1,
+    title: 'Test Movie',
+    genres: ['test'],
+    year: 2000,
+  };
+
+  const mockMovies: Movie[] = [mockMovie];
+
+  const mockMoviesService = {
+    getAll: jest.fn().mockReturnValue(mockMovies),
+    getOne: jest.fn().mockReturnValue(mockMovie),
+    create: jest.fn().mockReturnValue(mockMovie),
+    update: jest.fn().mockReturnValue(mockMovie),
+    deleteOne: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MoviesController],
       providers: [
         {
           provide: MoviesService,
-          useValue: {
-            getAll: jest.fn(),
-            getOne: jest.fn(),
-            create: jest.fn(),
-            update: jest.fn(),
-            deleteOne: jest.fn(),
-          },
+          useValue: mockMoviesService,
         },
       ],
     }).compile();
@@ -41,54 +52,29 @@ describe('MoviesController', () => {
         year: 2023,
       };
 
-      const result: Movie = {
-        id: 1,
-        ...createMovieDto,
-      };
-
-      jest.spyOn(service, 'create').mockReturnValue(result);
-
-      expect(controller.create(createMovieDto)).toEqual(result);
+      expect(controller.create(createMovieDto)).toEqual(mockMovie);
+      expect(service.create).toHaveBeenCalledWith(createMovieDto);
     });
   });
 
   describe('getAll', () => {
     it('should return an array of movies', () => {
-      const result: Movie[] = [
-        {
-          id: 1,
-          title: 'Test Movie',
-          genres: ['test'],
-          year: 2000,
-        },
-      ];
-      jest.spyOn(service, 'getAll').mockReturnValue(result);
-
-      expect(controller.getAll()).toEqual(result);
+      expect(controller.getAll()).toEqual(mockMovies);
+      expect(service.getAll).toHaveBeenCalled();
     });
   });
 
   describe('getOne', () => {
     it('should return a movie', () => {
-      const result: Movie = {
-        id: 1,
-        title: 'Test Movie',
-        genres: ['test'],
-        year: 2000,
-      };
-
-      jest.spyOn(service, 'getOne').mockReturnValue(result);
-
-      expect(controller.getOne(1)).toEqual(result);
+      expect(controller.getOne(1)).toEqual(mockMovie);
+      expect(service.getOne).toHaveBeenCalledWith(1);
     });
   });
 
   describe('remove', () => {
     it('should delete a movie and return void', () => {
-      jest.spyOn(service, 'deleteOne').mockReturnValue(undefined);
       controller.remove(1);
 
-      expect(service.deleteOne).toHaveBeenCalled();
       expect(service.deleteOne).toHaveBeenCalledWith(1);
     });
   });
@@ -101,14 +87,8 @@ describe('MoviesController', () => {
         year: 2024,
       };
 
-      const result: Movie = {
-        id: 1,
-        ...updateMovieDto,
-      };
-
-      jest.spyOn(service, 'update').mockReturnValue(result);
-
-      expect(controller.update(1, updateMovieDto)).toEqual(result);
+      expect(controller.update(1, updateMovieDto)).toEqual(mockMovie);
+      expect(service.update).toHaveBeenCalledWith(1, updateMovieDto);
     });
   });
 });
