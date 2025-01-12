@@ -28,4 +28,11 @@ describe('MoviesService', () => {
       expect(createdMovie.year).toBe(2000);
     });
   });
+
+  describe('getAll', () => {
+    it('should return an array', () => {
+      const result = service.getAll();
+      expect(result).toBeInstanceOf(Array);
+    });
+  });
 });
