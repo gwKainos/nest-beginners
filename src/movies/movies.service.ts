@@ -20,4 +20,8 @@ export class MoviesService {
     // 새로 생성된 객체 자체를 반환
     return newMovie;
   }
+
+  getAll(): Movie[] {
+    return this.movies;
+  }
 }
