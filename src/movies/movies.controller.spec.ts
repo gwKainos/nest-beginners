@@ -92,4 +92,23 @@ describe('MoviesController', () => {
       expect(service.deleteOne).toHaveBeenCalledWith(1);
     });
   });
+
+  describe('update', () => {
+    it('should update and return a movie', () => {
+      const updateMovieDto = {
+        title: 'Updated Movie',
+        genres: ['action'],
+        year: 2024,
+      };
+
+      const result: Movie = {
+        id: 1,
+        ...updateMovieDto,
+      };
+
+      jest.spyOn(service, 'update').mockReturnValue(result);
+
+      expect(controller.update(1, updateMovieDto)).toEqual(result);
+    });
+  });
 });
