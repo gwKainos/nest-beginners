@@ -67,4 +67,19 @@ describe('MoviesController', () => {
       expect(controller.getAll()).toEqual(result);
     });
   });
+
+  describe('getOne', () => {
+    it('should return a movie', () => {
+      const result: Movie = {
+        id: 1,
+        title: 'Test Movie',
+        genres: ['test'],
+        year: 2000,
+      };
+
+      jest.spyOn(service, 'getOne').mockReturnValue(result);
+
+      expect(controller.getOne(1)).toEqual(result);
+    });
+  });
 });
