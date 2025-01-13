@@ -8,12 +8,6 @@ describe('MoviesController', () => {
   let controller: MoviesController;
   let service: MoviesService;
 
-  const testMovieData: CreateMovieDto = {
-    title: '이상한 나라의 수학자',
-    year: 2022,
-    genres: ['힐링', '감명을 주는', '청춘'],
-  };
-
   const mockMovie: Movie = {
     id: 1,
     title: '이상한 나라의 수학자',
@@ -31,7 +25,7 @@ describe('MoviesController', () => {
     getAll: jest.fn().mockReturnValue(mockMovies),
     getOne: jest.fn().mockReturnValue(mockMovie),
     deleteOne: jest.fn().mockReturnValue(mockMovie),
-    // update: jest.fn().mockReturnValue(mockMovie),
+    update: jest.fn().mockReturnValue(mockMovie),
   };
 
   beforeEach(async () => {
@@ -55,10 +49,16 @@ describe('MoviesController', () => {
 
   describe('create', () => {
     it('should create and return a movie', async () => {
-      const result = await controller.create(testMovieData);
+      const createMovieData: CreateMovieDto = {
+        title: '이상한 나라의 수학자',
+        year: 2022,
+        genres: ['힐링', '감명을 주는', '청춘'],
+      };
+
+      const result = await controller.create(createMovieData);
 
       expect(result).toEqual(mockMovie);
-      expect(service.create).toHaveBeenCalledWith(testMovieData);
+      expect(service.create).toHaveBeenCalledWith(createMovieData);
     });
   });
 
@@ -88,16 +88,16 @@ describe('MoviesController', () => {
     });
   });
 
-  // describe('update', () => {
-  //   it('should update and return a movie', () => {
-  //     const updateMovieDto = {
-  //       title: 'Updated Movie',
-  //       genres: ['action'],
-  //       year: 2024,
-  //     };
-  //
-  //     expect(controller.update(1, updateMovieDto)).toEqual(mockMovie);
-  //     expect(service.update).toHaveBeenCalledWith(1, updateMovieDto);
-  //   });
-  // });
+  describe('update', () => {
+    it('should update and return a movie', async () => {
+      const updateMovieDto = {
+        title: 'Updated Movie',
+        year: 2024,
+      };
+      const result = await controller.update(1, updateMovieDto);
+
+      expect(result).toEqual(mockMovie);
+      expect(service.update).toHaveBeenCalledWith(1, updateMovieDto);
+    });
+  });
 });

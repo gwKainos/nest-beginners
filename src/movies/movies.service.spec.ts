@@ -69,27 +69,6 @@ describe('MoviesService', () => {
     service = module.get<MoviesService>(MoviesService);
   });
 
-  // describe('create', () => {
-  //   it('should create a movie', async () => {
-  //     jest.spyOn(prismaService.movie!, 'create').mockResolvedValue(mockMovie);
-  //
-  //     const createdMovie = await service.create(testMovieData);
-  //
-  //     expect(createdMovie).toMatchObject({
-  //       id: 1,
-  //       ...testMovieData,
-  //       genres: JSON.parse(JSON.stringify(testMovieData.genres)),
-  //     });
-  //
-  //     expect(prismaService.movie!.create).toHaveBeenCalledWith({
-  //       data: {
-  //         ...testMovieData,
-  //         genres: JSON.parse(JSON.stringify(testMovieData.genres)),
-  //       },
-  //     });
-  //   });
-  // });
-
   describe('create', () => {
     it('should create a movie', async () => {
       jest.spyOn(prismaService.movie!, 'create').mockResolvedValue(mockMovie);
