@@ -12,6 +12,9 @@ export class MoviesService {
     const newMovie: Movie = {
       id: this.movies.length + 1,
       ...movieData,
+      isDeleted: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
 
     // 내부 배열에 넣고
