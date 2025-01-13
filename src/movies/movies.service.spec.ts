@@ -87,12 +87,16 @@ describe('MoviesService', () => {
 
   describe('getAll', () => {
     it('should return an empty array if no movies exist', async () => {
+      jest.spyOn(prismaService.movie!, 'findMany').mockResolvedValueOnce([]);
+
       const result = await service.getAll();
       expect(result).toEqual([]);
     });
 
     it('should return an array with all movies', async () => {
-      service.create(testMovieData);
+      jest
+        .spyOn(prismaService.movie!, 'findMany')
+        .mockResolvedValueOnce([mockMovie]);
 
       const result = await service.getAll();
       expect(result).toHaveLength(1);
@@ -101,61 +105,79 @@ describe('MoviesService', () => {
   });
 
   describe('getOne', () => {
-    beforeEach(() => {
-      service.create(testMovieData);
-    });
+    it('should return a movie by ID', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(mockMovie);
 
-    it('should return a movie by ID', () => {
-      const movie = service.getOne(1);
+      const movie = await service.getOne(1);
       expect(movie).toBeDefined();
       expect(movie.id).toBe(1);
     });
 
-    it('should throw a NotFoundException if movie not found', () => {
-      expect(() => service.getOne(999)).toThrow(NotFoundException);
+    it('should throw a NotFoundException if movie not found', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(null);
+
+      await expect(service.getOne(999)).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('deleteOne', () => {
-    beforeEach(() => {
-      service.create(testMovieData);
-    });
-
     it('should delete a movie by ID', async () => {
-      const beforeDelete = (await service.getAll()).length;
-      service.deleteOne(1);
-      const afterDelete = (await service.getAll()).length;
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(mockMovie);
+      jest.spyOn(prismaService.movie!, 'update').mockResolvedValueOnce({
+        ...mockMovie,
+        isDeleted: true,
+      });
 
-      expect(afterDelete).toBeLessThan(beforeDelete);
+      await service.deleteOne(1);
+
+      expect(prismaService.movie!.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { isDeleted: true },
+      });
     });
 
-    it('should throw a NotFoundException if movie not found', () => {
-      expect(() => service.deleteOne(999)).toThrow(NotFoundException);
+    it('should throw a NotFoundException if movie not found', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(null);
+
+      await expect(service.deleteOne(999)).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('update', () => {
-    beforeEach(() => {
-      service.create(testMovieData);
+    it('should update a movie by ID', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(mockMovie);
+      jest.spyOn(prismaService.movie!, 'update').mockResolvedValueOnce({
+        ...mockMovie,
+        title: 'Updated Test Movie',
+      });
+
+      const updatedMovie = await service.update(1, {
+        title: 'Updated Test Movie',
+      });
+
+      expect(updatedMovie.title).toBe('Updated Test Movie');
+      expect(prismaService.movie!.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { title: 'Updated Test Movie' },
+      });
     });
 
-    it('should update a movie by ID', () => {
-      const updateData = { title: 'Updated Test Movie' };
-      service.update(1, updateData);
+    it('should throw a NotFoundException if movie not found', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(null);
 
-      const updatedMovie = service.getOne(1);
-      expect(updatedMovie.title).toBe(updateData.title);
-    });
-
-    it('should retain original data if no update fields are provided', () => {
-      service.update(1, {});
-      const movie = service.getOne(1);
-
-      expect(movie).toMatchObject(testMovieData);
-    });
-
-    it('should throw a NotFoundException if movie not found', () => {
-      expect(() => service.update(999, {})).toThrow(NotFoundException);
+      await expect(service.update(999, {})).rejects.toThrow(NotFoundException);
     });
   });
 });
