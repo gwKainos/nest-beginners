@@ -17,4 +17,5 @@ $ nest g s movies
 
 ```shell
 $ npm i @nestjs/mapped-types
+$ npm i class-validator class-transformer 
 ```
