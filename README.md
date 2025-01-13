@@ -26,11 +26,11 @@ $ npm i class-validator class-transformer
 1. movie.prisma 파일 생성
 2. 기존 데이터 유지하며 마이그레이션
 ```shell
-$ npx prisma migrate deploy --schema=movie.prisma
+$ npx prisma migrate deploy --schema=./prisma/movie.prisma --name init
 ```
 3. 기존 데이터 삭제하면서 마이그레이션
 ```shell
-$ npx prisma migrate dev --schema=movie.prisma
+$ npx prisma migrate dev --schema=./prisma/movie.prisma --name init
 ```
 4. Prisma Client 생성
 ```shell

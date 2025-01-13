@@ -10,7 +10,7 @@ datasource db {
 model Movie {
   id        Int      @id @default(autoincrement())
   title     String
-  genres    String[]
+  genres    Json
   year      Int
   isDeleted Boolean  @default(false)
   createdAt DateTime @default(now())
