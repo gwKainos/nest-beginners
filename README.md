@@ -37,3 +37,8 @@ $ npx prisma migrate dev --schema=movie.prisma
 $ npx prisma generate --schema=movie.prisma
 ```
 
+### 데이터 생명 주기(Lifecycle) 기반으로 테스트 작성
+1. 조회 (getAll, getOne)
+2. 생성 (create)
+3. 삭제 (deleteOne)
+4. 수정 (update)
