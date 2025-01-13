@@ -3,6 +3,7 @@ import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 
 describe('MoviesService', () => {
   let service: MoviesService;
@@ -22,14 +23,36 @@ describe('MoviesService', () => {
     updatedAt: new Date(),
   };
 
+  const mockMovieDelegate: Prisma.MovieDelegate<any> = {
+    findMany: jest.fn().mockResolvedValue([]),
+    findUnique: jest.fn(),
+    findUniqueOrThrow: jest.fn(),
+    findFirst: jest.fn(),
+    findFirstOrThrow: jest.fn(),
+    create: jest.fn().mockResolvedValue(mockMovie),
+    createMany: jest.fn(),
+    update: jest.fn(),
+    updateMany: jest.fn(),
+    delete: jest.fn(),
+    deleteMany: jest.fn(),
+    upsert: jest.fn(),
+    count: jest.fn(),
+    aggregate: jest.fn(),
+    groupBy: jest.fn(),
+    fields: {
+      id: undefined,
+      title: undefined,
+      genres: undefined,
+      year: undefined,
+      isDeleted: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+    },
+  };
+
   beforeEach(async () => {
     prismaService = {
-      movie: {
-        findMany: jest.fn().mockResolvedValue([]),
-        findUnique: jest.fn(),
-        create: jest.fn(),
-        update: jest.fn(),
-      },
+      movie: mockMovieDelegate,
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -56,7 +79,6 @@ describe('MoviesService', () => {
         ...testMovieData,
       });
 
-      // 내부 데이터에 저장되었는지 확인
       expect(prismaService.movie!.create).toHaveBeenCalledWith({
         data: testMovieData,
       });

@@ -17,7 +17,7 @@ export class MoviesController {
   constructor(private readonly moviesService: MoviesService) {}
 
   @Post()
-  create(@Body() movieData: CreateMovieDto): Movie {
+  create(@Body() movieData: CreateMovieDto): Promise<Movie> {
     return this.moviesService.create(movieData);
   }
 

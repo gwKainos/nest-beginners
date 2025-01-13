@@ -11,21 +11,14 @@ export class MoviesService {
 
   private movies: Movie[] = [];
 
-  create(movieData: CreateMovieDto): Movie {
-    // 새 Movie 객체를 변수에 담는다
-    const newMovie: Movie = {
-      id: this.movies.length + 1,
-      ...movieData,
-      isDeleted: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    // 내부 배열에 넣고
-    this.movies.push(newMovie);
-
-    // 새로 생성된 객체 자체를 반환
-    return newMovie;
+  async create(movieData: CreateMovieDto): Promise<Movie> {
+    return this.prisma.movie.create({
+      data: {
+        title: movieData.title,
+        year: movieData.year,
+        genres: movieData.genres,
+      },
+    });
   }
 
   async getAll(): Promise<Movie[]> {
