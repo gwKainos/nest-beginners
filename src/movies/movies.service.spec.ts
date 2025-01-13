@@ -2,9 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('MoviesService', () => {
   let service: MoviesService;
+  let prismaService: Partial<PrismaService>;
 
   const testMovieData: CreateMovieDto = {
     title: '이상한 나라의 수학자',
@@ -13,18 +15,27 @@ describe('MoviesService', () => {
   };
 
   beforeEach(async () => {
+    prismaService = {
+      movie: {
+        findMany: jest.fn().mockResolvedValue([]), // Mock findMany 메서드
+      } as any, // 타입 강제 적용
+    };
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MoviesService],
+      providers: [
+        MoviesService,
+        {
+          provide: PrismaService,
+          useValue: prismaService,
+        },
+      ],
     }).compile();
 
     service = module.get<MoviesService>(MoviesService);
-
-    // 데이터 초기화
-    (service as any).movies = [];
   });
 
   describe('create', () => {
-    it('should create a movie', () => {
+    it('should create a movie', async () => {
       const createdMovie = service.create(testMovieData);
 
       expect(createdMovie).toMatchObject({
@@ -33,21 +44,21 @@ describe('MoviesService', () => {
       });
 
       // 내부 데이터에 저장되었는지 확인
-      const allMovies = service.getAll();
+      const allMovies = await service.getAll();
       expect(allMovies).toContainEqual(createdMovie);
     });
   });
 
   describe('getAll', () => {
-    it('should return an empty array if no movies exist', () => {
+    it('should return an empty array if no movies exist', async () => {
       const result = await service.getAll();
       expect(result).toEqual([]);
     });
 
-    it('should return an array with all movies', () => {
+    it('should return an array with all movies', async () => {
       service.create(testMovieData);
 
-      const result = service.getAll();
+      const result = await service.getAll();
       expect(result).toHaveLength(1);
       expect(result[0]).toMatchObject(testMovieData);
     });
@@ -74,10 +85,10 @@ describe('MoviesService', () => {
       service.create(testMovieData);
     });
 
-    it('should delete a movie by ID', () => {
-      const beforeDelete = service.getAll().length;
+    it('should delete a movie by ID', async () => {
+      const beforeDelete = (await service.getAll()).length;
       service.deleteOne(1);
-      const afterDelete = service.getAll().length;
+      const afterDelete = (await service.getAll()).length;
 
       expect(afterDelete).toBeLessThan(beforeDelete);
     });

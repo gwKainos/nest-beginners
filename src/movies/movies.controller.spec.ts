@@ -10,9 +10,12 @@ describe('MoviesController', () => {
 
   const mockMovie: Movie = {
     id: 1,
-    title: 'Test Movie',
-    genres: ['test'],
-    year: 2000,
+    title: '이상한 나라의 수학자',
+    year: 2022,
+    genres: ['힐링', '감명을 주는', '청춘'],
+    isDeleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   const mockMovies: Movie[] = [mockMovie];
@@ -58,8 +61,10 @@ describe('MoviesController', () => {
   });
 
   describe('getAll', () => {
-    it('should return an array of movies', () => {
-      expect(controller.getAll()).toEqual(mockMovies);
+    it('should return an array of movies', async () => {
+      const result = await controller.getAll();
+
+      expect(result).toEqual(mockMovies);
       expect(service.getAll).toHaveBeenCalled();
     });
   });

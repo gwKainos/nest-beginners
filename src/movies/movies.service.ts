@@ -27,8 +27,8 @@ export class MoviesService {
     return newMovie;
   }
 
-  getAll(): Movie[] {
-    return this.movies;
+  async getAll(): Promise<Movie[]> {
+    return this.movies.filter((movie) => !movie.isDeleted);
   }
 
   getOne(id: number) {
