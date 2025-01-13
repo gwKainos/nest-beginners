@@ -3,4 +3,7 @@ export class Movie {
   title: string;
   year: number;
   genres: string[];
+  isDeleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
