@@ -15,14 +15,13 @@ export class MoviesService {
       data: {
         title: movieData.title,
         year: movieData.year,
-        genres: JSON.stringify(movieData.genres), // 배열을 JSON 문자열로 변환
+        genres: JSON.stringify(movieData.genres),
         isDeleted: false,
       },
     });
-
     return {
       ...createdMovie,
-      genres: JSON.parse(createdMovie.genres as string),
+      genres: createdMovie.genres as string[],
     };
   }
 
@@ -33,7 +32,7 @@ export class MoviesService {
 
     return movies.map((movie) => ({
       ...movie,
-      genres: JSON.parse(movie.genres as string),
+      genres: movie.genres as string[],
     }));
   }
 
@@ -48,7 +47,7 @@ export class MoviesService {
 
     return {
       ...movie,
-      genres: JSON.parse(movie.genres as string),
+      genres: movie.genres as string[],
     };
   }
 
@@ -78,7 +77,7 @@ export class MoviesService {
 
     return {
       ...updatedMovie,
-      genres: JSON.parse(updatedMovie.genres as string), // Prisma에서 반환된 JSON 값을 문자열로 변환 후 파싱
+      genres: movie.genres as string[],
     };
   }
 }

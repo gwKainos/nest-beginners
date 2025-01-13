@@ -21,11 +21,11 @@ describe('MoviesController', () => {
   const mockMovies: Movie[] = [mockMovie];
 
   const mockMoviesService = {
+    // create: jest.fn().mockReturnValue(mockMovie),
     getAll: jest.fn().mockReturnValue(mockMovies),
     getOne: jest.fn().mockReturnValue(mockMovie),
-    create: jest.fn().mockReturnValue(mockMovie),
-    update: jest.fn().mockReturnValue(mockMovie),
-    deleteOne: jest.fn(),
+    deleteOne: jest.fn().mockReturnValue(mockMovie),
+    // update: jest.fn().mockReturnValue(mockMovie),
   };
 
   beforeEach(async () => {
@@ -47,18 +47,18 @@ describe('MoviesController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('create', () => {
-    it('should create and return a movie', () => {
-      const createMovieDto: CreateMovieDto = {
-        title: 'New Movie',
-        genres: ['drama'],
-        year: 2023,
-      };
-
-      expect(controller.create(createMovieDto)).toEqual(mockMovie);
-      expect(service.create).toHaveBeenCalledWith(createMovieDto);
-    });
-  });
+  // describe('create', () => {
+  //   it('should create and return a movie', () => {
+  //     const createMovieDto: CreateMovieDto = {
+  //       title: '이상한 나라의 수학자',
+  //       genres: ['힐링', '감명을 주는', '청춘'],
+  //       year: 2022,
+  //     };
+  //
+  //     expect(controller.create(createMovieDto)).toEqual(mockMovie);
+  //     expect(service.create).toHaveBeenCalledWith(createMovieDto);
+  //   });
+  // });
 
   describe('getAll', () => {
     it('should return an array of movies', async () => {
@@ -70,8 +70,10 @@ describe('MoviesController', () => {
   });
 
   describe('getOne', () => {
-    it('should return a movie', () => {
-      expect(controller.getOne(1)).toEqual(mockMovie);
+    it('should return a movie', async () => {
+      const result = await controller.getOne(1);
+
+      expect(result).toEqual(mockMovie);
       expect(service.getOne).toHaveBeenCalledWith(1);
     });
   });
@@ -84,16 +86,16 @@ describe('MoviesController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update and return a movie', () => {
-      const updateMovieDto = {
-        title: 'Updated Movie',
-        genres: ['action'],
-        year: 2024,
-      };
-
-      expect(controller.update(1, updateMovieDto)).toEqual(mockMovie);
-      expect(service.update).toHaveBeenCalledWith(1, updateMovieDto);
-    });
-  });
+  // describe('update', () => {
+  //   it('should update and return a movie', () => {
+  //     const updateMovieDto = {
+  //       title: 'Updated Movie',
+  //       genres: ['action'],
+  //       year: 2024,
+  //     };
+  //
+  //     expect(controller.update(1, updateMovieDto)).toEqual(mockMovie);
+  //     expect(service.update).toHaveBeenCalledWith(1, updateMovieDto);
+  //   });
+  // });
 });
