@@ -8,6 +8,12 @@ describe('MoviesController', () => {
   let controller: MoviesController;
   let service: MoviesService;
 
+  const testMovieData: CreateMovieDto = {
+    title: '이상한 나라의 수학자',
+    year: 2022,
+    genres: ['힐링', '감명을 주는', '청춘'],
+  };
+
   const mockMovie: Movie = {
     id: 1,
     title: '이상한 나라의 수학자',
@@ -21,7 +27,7 @@ describe('MoviesController', () => {
   const mockMovies: Movie[] = [mockMovie];
 
   const mockMoviesService = {
-    // create: jest.fn().mockReturnValue(mockMovie),
+    create: jest.fn().mockReturnValue(mockMovie),
     getAll: jest.fn().mockReturnValue(mockMovies),
     getOne: jest.fn().mockReturnValue(mockMovie),
     deleteOne: jest.fn().mockReturnValue(mockMovie),
@@ -47,18 +53,14 @@ describe('MoviesController', () => {
     expect(controller).toBeDefined();
   });
 
-  // describe('create', () => {
-  //   it('should create and return a movie', () => {
-  //     const createMovieDto: CreateMovieDto = {
-  //       title: '이상한 나라의 수학자',
-  //       genres: ['힐링', '감명을 주는', '청춘'],
-  //       year: 2022,
-  //     };
-  //
-  //     expect(controller.create(createMovieDto)).toEqual(mockMovie);
-  //     expect(service.create).toHaveBeenCalledWith(createMovieDto);
-  //   });
-  // });
+  describe('create', () => {
+    it('should create and return a movie', async () => {
+      const result = await controller.create(testMovieData);
+
+      expect(result).toEqual(mockMovie);
+      expect(service.create).toHaveBeenCalledWith(testMovieData);
+    });
+  });
 
   describe('getAll', () => {
     it('should return an array of movies', async () => {

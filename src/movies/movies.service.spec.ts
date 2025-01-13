@@ -90,6 +90,28 @@ describe('MoviesService', () => {
   //   });
   // });
 
+  describe('create', () => {
+    it('should create a movie', async () => {
+      jest.spyOn(prismaService.movie!, 'create').mockResolvedValue(mockMovie);
+
+      const createdMovie = await service.create(testMovieData);
+      expect(createdMovie).toMatchObject(mockMovie);
+
+      // PrismaService 호출 확인
+      expect(prismaService.movie.create).toHaveBeenCalled();
+
+      expect(prismaService.movie.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            title: '이상한 나라의 수학자',
+            year: 2022,
+            genres: JSON.stringify(['힐링', '감명을 주는', '청춘']),
+          }),
+        }),
+      );
+    });
+  });
+
   describe('getAll', () => {
     it('should return an empty array if no movies exist', async () => {
       jest.spyOn(prismaService.movie!, 'findMany').mockResolvedValueOnce([]);
