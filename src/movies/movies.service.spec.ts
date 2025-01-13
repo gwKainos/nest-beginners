@@ -14,11 +14,22 @@ describe('MoviesService', () => {
     genres: ['힐링', '감명을 주는', '청춘'],
   };
 
+  const mockMovie = {
+    id: 1,
+    ...testMovieData,
+    isDeleted: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
   beforeEach(async () => {
     prismaService = {
       movie: {
-        findMany: jest.fn().mockResolvedValue([]), // Mock findMany 메서드
-      } as any, // 타입 강제 적용
+        findMany: jest.fn().mockResolvedValue([]),
+        findUnique: jest.fn(),
+        create: jest.fn(),
+        update: jest.fn(),
+      },
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -36,16 +47,19 @@ describe('MoviesService', () => {
 
   describe('create', () => {
     it('should create a movie', async () => {
-      const createdMovie = service.create(testMovieData);
+      jest.spyOn(prismaService.movie!, 'create').mockResolvedValue(mockMovie);
+
+      const createdMovie = await service.create(testMovieData);
 
       expect(createdMovie).toMatchObject({
-        id: expect.any(Number),
+        id: 1,
         ...testMovieData,
       });
 
       // 내부 데이터에 저장되었는지 확인
-      const allMovies = await service.getAll();
-      expect(allMovies).toContainEqual(createdMovie);
+      expect(prismaService.movie!.create).toHaveBeenCalledWith({
+        data: testMovieData,
+      });
     });
   });
 
