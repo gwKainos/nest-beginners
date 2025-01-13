@@ -3,7 +3,8 @@ import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { safeParseJSON } from '../utils/json.util'; // 유틸리티 함수 import
+
+// 유틸리티 함수 import
 
 @Injectable()
 export class MoviesService {
@@ -15,24 +16,24 @@ export class MoviesService {
         title: movieData.title,
         year: movieData.year,
         genres: JSON.stringify(movieData.genres), // 배열을 JSON 문자열로 변환
-        isDeleted: false, // 기본값 설정
+        isDeleted: false,
       },
     });
 
     return {
       ...createdMovie,
-      genres: safeParseJSON<string[]>(createdMovie.genres, []),
+      genres: JSON.parse(createdMovie.genres as string),
     };
   }
 
   async getAll(): Promise<Movie[]> {
     const movies = await this.prisma.movie.findMany({
-      where: { isDeleted: false }, // 삭제되지 않은 영화만 조회
+      where: { isDeleted: false },
     });
 
     return movies.map((movie) => ({
       ...movie,
-      genres: safeParseJSON<string[]>(movie.genres, []), // 안전한 JSON 파싱
+      genres: JSON.parse(movie.genres as string),
     }));
   }
 
@@ -47,21 +48,21 @@ export class MoviesService {
 
     return {
       ...movie,
-      genres: safeParseJSON<string[]>(movie.genres, []), // JSON 문자열을 배열로 변환
+      genres: JSON.parse(movie.genres as string),
     };
   }
 
   async deleteOne(id: number): Promise<void> {
-    const movie = await this.getOne(id); // 존재 여부 확인
+    const movie = await this.getOne(id);
 
     await this.prisma.movie.update({
       where: { id: movie.id },
-      data: { isDeleted: true }, // 소프트 삭제 플래그 설정
+      data: { isDeleted: true },
     });
   }
 
   async update(id: number, updateData: UpdateMovieDto): Promise<Movie> {
-    const movie = await this.getOne(id); // 존재 여부 확인
+    const movie = await this.getOne(id);
 
     const updatedMovie = await this.prisma.movie.update({
       where: { id: movie.id },
@@ -70,14 +71,14 @@ export class MoviesService {
         year: updateData.year,
         genres: updateData.genres
           ? JSON.stringify(updateData.genres)
-          : undefined,
+          : movie.genres,
         updatedAt: new Date(),
       },
     });
 
     return {
       ...updatedMovie,
-      genres: safeParseJSON<string[]>(updatedMovie.genres, []), // JSON 문자열을 배열로 변환
+      genres: JSON.parse(updatedMovie.genres as string), // Prisma에서 반환된 JSON 값을 문자열로 변환 후 파싱
     };
   }
 }

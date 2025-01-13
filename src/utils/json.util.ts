@@ -1,10 +1,10 @@
-export function safeParseJSON<T>(value: any, defaultValue: T): T {
+export function safeParseJSON<T>(
+  json: string | null | undefined,
+  defaultValue: T,
+): T {
+  if (!json) return defaultValue;
   try {
-    if (typeof value === 'string') {
-      const parsed = JSON.parse(value);
-      return parsed as T;
-    }
-    return defaultValue;
+    return JSON.parse(json) as T;
   } catch {
     return defaultValue;
   }

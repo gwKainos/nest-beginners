@@ -78,7 +78,7 @@ describe('MoviesController', () => {
 
   describe('remove', () => {
     it('should delete a movie and return void', () => {
-      controller.remove(1);
+      controller.deleteOne(1);
 
       expect(service.deleteOne).toHaveBeenCalledWith(1);
     });
