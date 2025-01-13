@@ -3,6 +3,7 @@ import { Movie } from './entities/movie.entity';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { safeParseJSON } from '../utils/json.util'; // 유틸리티 함수 import
 
 @Injectable()
 export class MoviesService {
@@ -28,7 +29,14 @@ export class MoviesService {
   }
 
   async getAll(): Promise<Movie[]> {
-    return this.movies.filter((movie) => !movie.isDeleted);
+    const movies = await this.prisma.movie.findMany({
+      where: { isDeleted: false },
+    });
+
+    return movies.map((movie) => ({
+      ...movie,
+      genres: safeParseJSON<string[]>(movie.genres, []), // 안전한 JSON 파싱
+    }));
   }
 
   getOne(id: number) {
