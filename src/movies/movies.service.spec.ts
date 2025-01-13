@@ -40,7 +40,7 @@ describe('MoviesService', () => {
 
   describe('getAll', () => {
     it('should return an empty array if no movies exist', () => {
-      const result = service.getAll();
+      const result = await service.getAll();
       expect(result).toEqual([]);
     });
 
