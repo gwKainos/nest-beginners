@@ -156,34 +156,41 @@ describe('MoviesService', () => {
       await expect(service.deleteOne(999)).rejects.toThrow(NotFoundException);
     });
   });
-  //
-  // describe('update', () => {
-  //   it('should update a movie by ID', async () => {
-  //     jest
-  //       .spyOn(prismaService.movie!, 'findUnique')
-  //       .mockResolvedValueOnce(mockMovie);
-  //     jest.spyOn(prismaService.movie!, 'update').mockResolvedValueOnce({
-  //       ...mockMovie,
-  //       title: 'Updated Test Movie',
-  //     });
-  //
-  //     const updatedMovie = await service.update(1, {
-  //       title: 'Updated Test Movie',
-  //     });
-  //
-  //     expect(updatedMovie.title).toBe('Updated Test Movie');
-  //     expect(prismaService.movie!.update).toHaveBeenCalledWith({
-  //       where: { id: 1 },
-  //       data: { title: 'Updated Test Movie' },
-  //     });
-  //   });
-  //
-  //   it('should throw a NotFoundException if movie not found', async () => {
-  //     jest
-  //       .spyOn(prismaService.movie!, 'findUnique')
-  //       .mockResolvedValueOnce(null);
-  //
-  //     await expect(service.update(999, {})).rejects.toThrow(NotFoundException);
-  //   });
-  // });
+
+  describe('update', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should update a movie by ID', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(mockMovie);
+
+      jest.spyOn(prismaService.movie!, 'update').mockResolvedValueOnce({
+        ...mockMovie,
+        title: 'Updated Test Movie',
+      });
+
+      const updatedMovie = await service.update(1, {
+        title: 'Updated Test Movie',
+      });
+
+      expect(updatedMovie.title).toBe('Updated Test Movie');
+      expect(prismaService.movie.update).toHaveBeenCalledWith({
+        where: { id: 1 },
+        data: { title: 'Updated Test Movie' },
+      });
+    });
+
+    it('should throw a NotFoundException if movie not found', async () => {
+      jest
+        .spyOn(prismaService.movie!, 'findUnique')
+        .mockResolvedValueOnce(null);
+
+      await expect(service.update(999, {})).rejects.toThrow(NotFoundException);
+
+      expect(prismaService.movie.update).not.toHaveBeenCalled();
+    });
+  });
 });

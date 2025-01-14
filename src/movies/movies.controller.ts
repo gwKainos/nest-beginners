@@ -1,11 +1,11 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   Param,
-  Delete,
-  Body,
+  Patch,
   Post,
-  Put,
 } from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -36,7 +36,7 @@ export class MoviesController {
     await this.moviesService.deleteOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: number,
     @Body() updateMovieDto: UpdateMovieDto,

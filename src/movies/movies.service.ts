@@ -60,24 +60,15 @@ export class MoviesService {
     });
   }
 
-  async update(id: number, updateData: UpdateMovieDto): Promise<Movie> {
-    const movie = await this.getOne(id);
+  async update(id: number, updateMovieDto: UpdateMovieDto): Promise<Movie> {
+    const existingMovie = await this.prisma.movie.findUnique({ where: { id } });
 
-    const updatedMovie = await this.prisma.movie.update({
-      where: { id: movie.id },
-      data: {
-        title: updateData.title,
-        year: updateData.year,
-        genres: updateData.genres
-          ? JSON.stringify(updateData.genres)
-          : movie.genres,
-        updatedAt: new Date(),
-      },
+    if (!existingMovie) {
+      throw new NotFoundException(`Movie with ID ${id} not found`);
+    }
+    return this.prisma.movie.update({
+      where: { id },
+      data: updateMovieDto,
     });
-
-    return {
-      ...updatedMovie,
-      genres: movie.genres as string[],
-    };
   }
 }
